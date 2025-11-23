@@ -293,7 +293,8 @@ void OAuthFlow::exchangeCodeForToken(const QString &code)
     postData.addQueryItem("redirect_uri", REDIRECT_URI);
     postData.addQueryItem("grant_type", "authorization_code");
 
-    QNetworkRequest request(QUrl(TOKEN_URL));
+    QUrl url(TOKEN_URL);
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     QNetworkReply *reply = m_networkManager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());
@@ -315,7 +316,8 @@ void OAuthFlow::refreshAccessToken(const QString &refreshToken)
     postData.addQueryItem("refresh_token", refreshToken);
     postData.addQueryItem("grant_type", "refresh_token");
 
-    QNetworkRequest request(QUrl(TOKEN_URL));
+    QUrl url(TOKEN_URL);
+    QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     QNetworkReply *reply = m_networkManager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());

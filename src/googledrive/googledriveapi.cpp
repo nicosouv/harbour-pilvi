@@ -5,6 +5,7 @@
 #include <QHttpMultiPart>
 #include <QUrlQuery>
 #include <QMimeDatabase>
+#include <QBuffer>
 #include <QDebug>
 
 const QString GoogleDriveApi::API_BASE_URL = "https://www.googleapis.com/drive/v3";
@@ -261,7 +262,12 @@ void GoogleDriveApi::makeRequest(const QUrl &url, RequestType type, const QByteA
     } else if (method == "POST") {
         reply = m_networkManager->post(request, data);
     } else if (method == "PATCH") {
-        reply = m_networkManager->sendCustomRequest(request, "PATCH", data);
+        // Qt 5.6 requires QIODevice* for sendCustomRequest
+        QBuffer *buffer = new QBuffer();
+        buffer->setData(data);
+        buffer->open(QIODevice::ReadOnly);
+        reply = m_networkManager->sendCustomRequest(request, "PATCH", buffer);
+        buffer->setParent(reply); // Cleanup with reply
     } else if (method == "DELETE") {
         reply = m_networkManager->deleteResource(request);
     }
