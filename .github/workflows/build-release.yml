@@ -42,6 +42,18 @@ jobs:
         run: |
           sed -i "s/^Version:.*/Version:    ${{ steps.version.outputs.version }}/" rpm/harbour-pilvi.yaml
 
+      - name: Inject OAuth client ID into spec
+        run: |
+          echo "Injecting PILVI_CLIENT_ID into spec file..."
+          if [ -n "${{ secrets.PILVI_CLIENT_ID }}" ]; then
+            sed -i "s|PILVI_CLIENT_ID=%{?_pilvi_client_id}%{!?_pilvi_client_id:\$PILVI_CLIENT_ID}|PILVI_CLIENT_ID=${{ secrets.PILVI_CLIENT_ID }}|" rpm/harbour-pilvi.yaml
+            echo "Client ID injected successfully"
+          else
+            echo "WARNING: PILVI_CLIENT_ID secret is not set!"
+          fi
+          echo "ConfigOptions in YAML:"
+          grep -A 1 "ConfigOptions:" rpm/harbour-pilvi.yaml || echo "No ConfigOptions found"
+
       - name: Build RPM for Sailfish OS
         id: build
         uses: R1tschY/sailfish-build-rpm@v1
@@ -50,7 +62,6 @@ jobs:
           release: ${{ env.SAILFISH_RELEASE }}
           fix-version: false
           check: true
-          extra-build-args: --define "_pilvi_client_id ${{ secrets.PILVI_CLIENT_ID }}"
         env:
           PILVI_CLIENT_ID: ${{ secrets.PILVI_CLIENT_ID }}
 
