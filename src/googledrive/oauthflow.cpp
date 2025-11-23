@@ -9,10 +9,14 @@
 #include <QDebug>
 
 // Google OAuth 2.0 configuration
-// Client ID can be public for native apps with PKCE
 #ifndef PILVI_CLIENT_ID
 #define PILVI_CLIENT_ID ""
 #warning "PILVI_CLIENT_ID macro is not defined at compile time"
+#endif
+
+#ifndef PILVI_CLIENT_SECRET
+#define PILVI_CLIENT_SECRET ""
+#warning "PILVI_CLIENT_SECRET macro is not defined at compile time"
 #endif
 
 // Stringify macro value for debugging
@@ -20,6 +24,7 @@
 #define TOSTRING(x) STRINGIFY(x)
 
 const QString OAuthFlow::CLIENT_ID = QString(PILVI_CLIENT_ID);
+const QString OAuthFlow::CLIENT_SECRET = QString(PILVI_CLIENT_SECRET);
 const QString OAuthFlow::REDIRECT_URI = "http://localhost";
 const QString OAuthFlow::AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const QString OAuthFlow::TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -313,6 +318,7 @@ void OAuthFlow::exchangeCodeForToken(const QString &code)
 
     QUrlQuery postData;
     postData.addQueryItem("client_id", CLIENT_ID);
+    postData.addQueryItem("client_secret", CLIENT_SECRET);
     postData.addQueryItem("code", code);
     postData.addQueryItem("code_verifier", m_codeVerifier); // PKCE verifier
     postData.addQueryItem("redirect_uri", redirectUri);
@@ -348,6 +354,7 @@ void OAuthFlow::refreshAccessToken(const QString &refreshToken)
 
     QUrlQuery postData;
     postData.addQueryItem("client_id", CLIENT_ID);
+    postData.addQueryItem("client_secret", CLIENT_SECRET);
     postData.addQueryItem("refresh_token", refreshToken);
     postData.addQueryItem("grant_type", "refresh_token");
 

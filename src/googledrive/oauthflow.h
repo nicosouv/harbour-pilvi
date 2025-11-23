@@ -56,6 +56,7 @@ private:
     quint16 m_localPort;
 
     static const QString CLIENT_ID;
+    static const QString CLIENT_SECRET;
     static const QString REDIRECT_URI;
     static const QString AUTHORIZATION_URL;
     static const QString TOKEN_URL;

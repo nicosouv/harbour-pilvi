@@ -4,10 +4,13 @@ CONFIG += sailfishapp
 
 # OAuth Configuration - loaded from .qmake.conf
 CLIENT_ID = $$pilvi_client_id
+CLIENT_SECRET = $$pilvi_client_secret
 
 message("=== OAuth Configuration Debug ===")
 message("pilvi_client_id from .qmake.conf: $$pilvi_client_id")
+message("pilvi_client_secret from .qmake.conf: $$pilvi_client_secret")
 message("CLIENT_ID variable: $$CLIENT_ID")
+message("CLIENT_SECRET variable: $$CLIENT_SECRET")
 
 isEmpty(CLIENT_ID) {
     warning("✗ No PILVI_CLIENT_ID defined - OAuth will not work!")
@@ -16,6 +19,15 @@ isEmpty(CLIENT_ID) {
 } else {
     message("✓ Building with OAuth Client ID: $$CLIENT_ID")
     DEFINES += PILVI_CLIENT_ID=\\\"$$CLIENT_ID\\\"
+}
+
+isEmpty(CLIENT_SECRET) {
+    warning("✗ No PILVI_CLIENT_SECRET defined - OAuth will not work!")
+    warning("✗ Set PILVI_CLIENT_SECRET environment variable before building")
+    DEFINES += PILVI_CLIENT_SECRET=\\\"\\\"
+} else {
+    message("✓ Building with OAuth Client Secret (hidden)")
+    DEFINES += PILVI_CLIENT_SECRET=\\\"$$CLIENT_SECRET\\\"
 }
 message("=================================")
 
