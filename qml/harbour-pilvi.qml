@@ -5,21 +5,11 @@ import "pages"
 ApplicationWindow {
     id: appWindow
 
-    initialPage: Component {
-        id: initialPageComponent
-
-        Loader {
-            sourceComponent: credentialStore.hasCredentials ? mainPageComponent : authPageComponent
-
-            Component {
-                id: mainPageComponent
-                MainPage { }
-            }
-
-            Component {
-                id: authPageComponent
-                AuthPage { }
-            }
+    Component.onCompleted: {
+        if (credentialStore.hasCredentials) {
+            pageStack.replace(Qt.resolvedUrl("pages/MainPage.qml"))
+        } else {
+            pageStack.replace(Qt.resolvedUrl("pages/AuthPage.qml"))
         }
     }
 

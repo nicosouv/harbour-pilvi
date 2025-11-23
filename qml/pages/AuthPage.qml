@@ -37,7 +37,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: Theme.itemSizeHuge
                 height: Theme.itemSizeHuge
-                source: "image://theme/icon-l-cloud"
+                source: "/usr/share/icons/hicolor/172x172/apps/harbour-pilvi.png"
             }
 
             Label {

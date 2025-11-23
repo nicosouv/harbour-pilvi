@@ -8,7 +8,7 @@ CoverBackground {
         anchors.centerIn: parent
         width: parent.width * 0.6
         height: width
-        source: "image://theme/icon-l-cloud"
+        source: "/usr/share/icons/hicolor/86x86/apps/harbour-pilvi.png"
         opacity: 0.3
     }
 
