@@ -5,6 +5,12 @@ CONFIG += sailfishapp
 # OAuth Configuration
 # Pass client ID via: sfdk build -- -DPILVI_CLIENT_ID="xxx.apps.googleusercontent.com"
 # Or set environment variable: PILVI_CLIENT_ID
+
+# Try to get from environment variable first
+isEmpty(PILVI_CLIENT_ID) {
+    PILVI_CLIENT_ID = $$(PILVI_CLIENT_ID)
+}
+
 !isEmpty(PILVI_CLIENT_ID) {
     DEFINES += PILVI_CLIENT_ID=\\\"$${PILVI_CLIENT_ID}\\\"
     message("Building with OAuth Client ID: $${PILVI_CLIENT_ID}")
