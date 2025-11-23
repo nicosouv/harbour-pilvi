@@ -42,17 +42,17 @@ jobs:
         run: |
           sed -i "s/^Version:.*/Version:    ${{ steps.version.outputs.version }}/" rpm/harbour-pilvi.yaml
 
-      - name: Inject OAuth client ID into spec
+      - name: Inject OAuth client ID into qmake.conf
         run: |
-          echo "Injecting PILVI_CLIENT_ID into spec file..."
+          echo "Injecting PILVI_CLIENT_ID into .qmake.conf..."
           if [ -n "${{ secrets.PILVI_CLIENT_ID }}" ]; then
-            sed -i "s|PILVI_CLIENT_ID=%{?_pilvi_client_id}%{!?_pilvi_client_id:\$PILVI_CLIENT_ID}|PILVI_CLIENT_ID=${{ secrets.PILVI_CLIENT_ID }}|" rpm/harbour-pilvi.yaml
+            sed -i "s/pilvi_client_id = .*/pilvi_client_id = ${{ secrets.PILVI_CLIENT_ID }}/" .qmake.conf
             echo "Client ID injected successfully"
+            echo "Content of .qmake.conf:"
+            cat .qmake.conf
           else
             echo "WARNING: PILVI_CLIENT_ID secret is not set!"
           fi
-          echo "ConfigOptions in YAML:"
-          grep -A 1 "ConfigOptions:" rpm/harbour-pilvi.yaml || echo "No ConfigOptions found"
 
       - name: Build RPM for Sailfish OS
         id: build
