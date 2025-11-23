@@ -10,11 +10,7 @@ Page {
     }
 
     Component.onCompleted: {
-        if (credentialStore.hasCredentials) {
-            loadFiles()
-        } else {
-            pageStack.push(Qt.resolvedUrl("AuthPage.qml"))
-        }
+        loadFiles()
     }
 
     function loadFiles() {

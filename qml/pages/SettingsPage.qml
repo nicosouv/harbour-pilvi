@@ -29,13 +29,15 @@ Page {
                 automaticCheck: false
                 onClicked: {
                     if (credentialStore.hasCredentials) {
-                        var remorse = Remorse.popupAction(page, qsTr("Signing out"), function() {
+                        remorse.execute(qsTr("Signing out"), function() {
                             credentialStore.clearCredentials()
-                            pageStack.replace(Qt.resolvedUrl("AuthPage.qml"))
+                            pageStack.replaceAbove(null, Qt.resolvedUrl("AuthPage.qml"))
                         })
                     }
                 }
             }
+
+            RemorsePopup { id: remorse }
 
             SectionHeader {
                 text: qsTr("Storage")

@@ -6,7 +6,21 @@ ApplicationWindow {
     id: appWindow
 
     initialPage: Component {
-        MainPage { }
+        id: initialPageComponent
+
+        Loader {
+            sourceComponent: credentialStore.hasCredentials ? mainPageComponent : authPageComponent
+
+            Component {
+                id: mainPageComponent
+                MainPage { }
+            }
+
+            Component {
+                id: authPageComponent
+                AuthPage { }
+            }
+        }
     }
 
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
