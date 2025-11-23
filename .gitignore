@@ -1,0 +1,26 @@
+# C++
+*.o
+*.so
+*.a
+moc_*
+qrc_*
+ui_*
+
+# Qt
+Makefile*
+*.pro.user
+*.autosave
+
+# Build directories
+build/
+RPMS/
+*.rpm
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Generated files
+translations/*.qm

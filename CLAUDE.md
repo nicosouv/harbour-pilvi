@@ -1,0 +1,1 @@
+- pour saiflish os la version de Qt est la 5.6
