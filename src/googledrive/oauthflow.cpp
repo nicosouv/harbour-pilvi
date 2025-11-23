@@ -41,12 +41,11 @@ OAuthFlow::OAuthFlow(QObject *parent)
             this, &OAuthFlow::handleIncomingConnection);
 
     // Debug: Log CLIENT_ID configuration status
-    qDebug() << "=== OAuthFlow initialization ===";
-    qDebug() << "PILVI_CLIENT_ID macro value:" << TOSTRING(PILVI_CLIENT_ID);
-    qDebug() << "CLIENT_ID QString value:" << CLIENT_ID;
-    qDebug() << "CLIENT_ID isEmpty:" << CLIENT_ID.isEmpty();
-    qDebug() << "CLIENT_ID length:" << CLIENT_ID.length();
-    qDebug() << "================================";
+    if (CLIENT_ID.isEmpty()) {
+        qWarning() << "OAuth client ID is not configured!";
+    } else {
+        qDebug() << "OAuth configured successfully";
+    }
 }
 
 OAuthFlow::~OAuthFlow()
@@ -123,12 +122,7 @@ void OAuthFlow::startAuthentication()
     }
 
     if (CLIENT_ID.isEmpty()) {
-        qWarning() << "=== OAuth Configuration Error ===";
         qWarning() << "OAuth client ID not configured";
-        qWarning() << "PILVI_CLIENT_ID macro:" << TOSTRING(PILVI_CLIENT_ID);
-        qWarning() << "CLIENT_ID value:" << CLIENT_ID;
-        qWarning() << "CLIENT_ID length:" << CLIENT_ID.length();
-        qWarning() << "================================";
         setError("OAuth not configured");
         emit authenticationFailed("OAuth not configured");
         return;
@@ -187,7 +181,6 @@ void OAuthFlow::openAuthorizationUrl()
     url.setQuery(query);
 
     qDebug() << "Opening browser for Google authentication...";
-    qDebug() << "Redirect URI:" << redirectUri;
 
     if (!QDesktopServices::openUrl(url)) {
         qWarning() << "Failed to open browser";
@@ -324,16 +317,6 @@ void OAuthFlow::exchangeCodeForToken(const QString &code)
     postData.addQueryItem("redirect_uri", redirectUri);
     postData.addQueryItem("grant_type", "authorization_code");
 
-    qDebug() << "=== Token Exchange Request ===";
-    qDebug() << "URL:" << TOKEN_URL;
-    qDebug() << "client_id:" << CLIENT_ID;
-    qDebug() << "code:" << code;
-    qDebug() << "code_verifier:" << m_codeVerifier;
-    qDebug() << "redirect_uri:" << REDIRECT_URI;
-    qDebug() << "grant_type: authorization_code";
-    qDebug() << "POST data:" << postData.toString(QUrl::FullyEncoded);
-    qDebug() << "==============================";
-
     QUrl url(TOKEN_URL);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -376,15 +359,10 @@ void OAuthFlow::handleTokenResponse()
     reply->deleteLater();
 
     QByteArray responseData = reply->readAll();
-    qDebug() << "=== Token Response ===";
-    qDebug() << "HTTP Status:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    qDebug() << "Response body:" << responseData;
-    qDebug() << "=====================";
 
     if (reply->error() != QNetworkReply::NoError) {
         QString error = reply->errorString();
         qWarning() << "Token request failed:" << error;
-        qWarning() << "Response body:" << responseData;
 
         setError(error);
         emit authenticationFailed(error);
@@ -392,8 +370,8 @@ void OAuthFlow::handleTokenResponse()
         return;
     }
 
-    QByteArray data = reply->readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
+    // Use responseData instead of reading again (buffer would be empty)
+    QJsonDocument doc = QJsonDocument::fromJson(responseData);
 
     if (!doc.isObject()) {
         setError("Invalid response from Google");
