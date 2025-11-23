@@ -20,7 +20,7 @@
 #define TOSTRING(x) STRINGIFY(x)
 
 const QString OAuthFlow::CLIENT_ID = QString(PILVI_CLIENT_ID);
-const QString OAuthFlow::REDIRECT_URI = "http://localhost:8080/callback";
+const QString OAuthFlow::REDIRECT_URI = "http://localhost";
 const QString OAuthFlow::AUTHORIZATION_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const QString OAuthFlow::TOKEN_URL = "https://oauth2.googleapis.com/token";
 const QString OAuthFlow::SCOPE = "https://www.googleapis.com/auth/drive";
@@ -164,8 +164,11 @@ void OAuthFlow::openAuthorizationUrl()
     QUrl url(AUTHORIZATION_URL);
     QUrlQuery query;
 
+    // Build redirect URI with actual port
+    QString redirectUri = QString("%1:%2").arg(REDIRECT_URI).arg(m_localPort);
+
     query.addQueryItem("client_id", CLIENT_ID);
-    query.addQueryItem("redirect_uri", REDIRECT_URI);
+    query.addQueryItem("redirect_uri", redirectUri);
     query.addQueryItem("response_type", "code");
     query.addQueryItem("scope", SCOPE);
     query.addQueryItem("state", m_state);
@@ -179,6 +182,7 @@ void OAuthFlow::openAuthorizationUrl()
     url.setQuery(query);
 
     qDebug() << "Opening browser for Google authentication...";
+    qDebug() << "Redirect URI:" << redirectUri;
 
     if (!QDesktopServices::openUrl(url)) {
         qWarning() << "Failed to open browser";
@@ -304,11 +308,14 @@ void OAuthFlow::exchangeCodeForToken(const QString &code)
 {
     qDebug() << "Exchanging authorization code for access token...";
 
+    // Build redirect URI with actual port (must match authorization request)
+    QString redirectUri = QString("%1:%2").arg(REDIRECT_URI).arg(m_localPort);
+
     QUrlQuery postData;
     postData.addQueryItem("client_id", CLIENT_ID);
     postData.addQueryItem("code", code);
     postData.addQueryItem("code_verifier", m_codeVerifier); // PKCE verifier
-    postData.addQueryItem("redirect_uri", REDIRECT_URI);
+    postData.addQueryItem("redirect_uri", redirectUri);
     postData.addQueryItem("grant_type", "authorization_code");
 
     qDebug() << "=== Token Exchange Request ===";
