@@ -12,7 +12,12 @@
 // Client ID can be public for native apps with PKCE
 #ifndef PILVI_CLIENT_ID
 #define PILVI_CLIENT_ID ""
+#warning "PILVI_CLIENT_ID macro is not defined at compile time"
 #endif
+
+// Stringify macro value for debugging
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 
 const QString OAuthFlow::CLIENT_ID = QString(PILVI_CLIENT_ID);
 const QString OAuthFlow::REDIRECT_URI = "http://localhost:8080/callback";
@@ -29,6 +34,14 @@ OAuthFlow::OAuthFlow(QObject *parent)
 {
     connect(m_localServer, &QTcpServer::newConnection,
             this, &OAuthFlow::handleIncomingConnection);
+
+    // Debug: Log CLIENT_ID configuration status
+    qDebug() << "=== OAuthFlow initialization ===";
+    qDebug() << "PILVI_CLIENT_ID macro value:" << TOSTRING(PILVI_CLIENT_ID);
+    qDebug() << "CLIENT_ID QString value:" << CLIENT_ID;
+    qDebug() << "CLIENT_ID isEmpty:" << CLIENT_ID.isEmpty();
+    qDebug() << "CLIENT_ID length:" << CLIENT_ID.length();
+    qDebug() << "================================";
 }
 
 OAuthFlow::~OAuthFlow()
@@ -105,7 +118,12 @@ void OAuthFlow::startAuthentication()
     }
 
     if (CLIENT_ID.isEmpty()) {
+        qWarning() << "=== OAuth Configuration Error ===";
         qWarning() << "OAuth client ID not configured";
+        qWarning() << "PILVI_CLIENT_ID macro:" << TOSTRING(PILVI_CLIENT_ID);
+        qWarning() << "CLIENT_ID value:" << CLIENT_ID;
+        qWarning() << "CLIENT_ID length:" << CLIENT_ID.length();
+        qWarning() << "================================";
         setError("OAuth not configured");
         emit authenticationFailed("OAuth not configured");
         return;

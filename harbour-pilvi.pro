@@ -6,18 +6,27 @@ CONFIG += sailfishapp
 # Pass client ID via: sfdk build -- -DPILVI_CLIENT_ID="xxx.apps.googleusercontent.com"
 # Or set environment variable: PILVI_CLIENT_ID
 
+message("=== OAuth Configuration Debug ===")
+message("PILVI_CLIENT_ID (qmake var before env check): $${PILVI_CLIENT_ID}")
+
 # Try to get from environment variable first
 isEmpty(PILVI_CLIENT_ID) {
+    message("PILVI_CLIENT_ID qmake var is empty, checking environment...")
     PILVI_CLIENT_ID = $$(PILVI_CLIENT_ID)
+    message("PILVI_CLIENT_ID from environment: $${PILVI_CLIENT_ID}")
+} else {
+    message("PILVI_CLIENT_ID already set as qmake var: $${PILVI_CLIENT_ID}")
 }
 
 !isEmpty(PILVI_CLIENT_ID) {
     DEFINES += PILVI_CLIENT_ID=\\\"$${PILVI_CLIENT_ID}\\\"
-    message("Building with OAuth Client ID: $${PILVI_CLIENT_ID}")
+    message("✓ Building with OAuth Client ID: $${PILVI_CLIENT_ID}")
+    message("✓ DEFINES contains: PILVI_CLIENT_ID=\\\"$${PILVI_CLIENT_ID}\\\"")
 } else {
-    warning("PILVI_CLIENT_ID not set - OAuth will not work!")
-    warning("See docs/OAUTH_SETUP.md for setup instructions")
+    warning("✗ PILVI_CLIENT_ID not set - OAuth will not work!")
+    warning("✗ See docs/OAUTH_SETUP.md for setup instructions")
 }
+message("=================================")
 
 SOURCES += \
     src/harbour-pilvi.cpp \
