@@ -45,13 +45,14 @@ jobs:
       - name: Build RPM for Sailfish OS
         id: build
         uses: R1tschY/sailfish-build-rpm@v1
-        env:
-          PILVI_CLIENT_ID: ${{ secrets.PILVI_CLIENT_ID }}
         with:
           arch: ${{ matrix.arch }}
           release: ${{ env.SAILFISH_RELEASE }}
           fix-version: false
           check: true
+          extra-build-args: -DPILVI_CLIENT_ID="${{ secrets.PILVI_CLIENT_ID }}"
+        env:
+          PILVI_CLIENT_ID: ${{ secrets.PILVI_CLIENT_ID }}
 
       - name: List built packages
         run: |
