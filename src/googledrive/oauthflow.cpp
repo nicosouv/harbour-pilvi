@@ -311,6 +311,16 @@ void OAuthFlow::exchangeCodeForToken(const QString &code)
     postData.addQueryItem("redirect_uri", REDIRECT_URI);
     postData.addQueryItem("grant_type", "authorization_code");
 
+    qDebug() << "=== Token Exchange Request ===";
+    qDebug() << "URL:" << TOKEN_URL;
+    qDebug() << "client_id:" << CLIENT_ID;
+    qDebug() << "code:" << code;
+    qDebug() << "code_verifier:" << m_codeVerifier;
+    qDebug() << "redirect_uri:" << REDIRECT_URI;
+    qDebug() << "grant_type: authorization_code";
+    qDebug() << "POST data:" << postData.toString(QUrl::FullyEncoded);
+    qDebug() << "==============================";
+
     QUrl url(TOKEN_URL);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -351,9 +361,16 @@ void OAuthFlow::handleTokenResponse()
 
     reply->deleteLater();
 
+    QByteArray responseData = reply->readAll();
+    qDebug() << "=== Token Response ===";
+    qDebug() << "HTTP Status:" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    qDebug() << "Response body:" << responseData;
+    qDebug() << "=====================";
+
     if (reply->error() != QNetworkReply::NoError) {
         QString error = reply->errorString();
         qWarning() << "Token request failed:" << error;
+        qWarning() << "Response body:" << responseData;
 
         setError(error);
         emit authenticationFailed(error);
