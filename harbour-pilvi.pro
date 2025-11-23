@@ -39,10 +39,10 @@ DISTFILES += \
     qml/pages/FileDetailsPage.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/AuthPage.qml \
+    qml/pages/SearchPage.qml \
     qml/cover/CoverPage.qml \
-    qml/components/FileListDelegate.qml \
-    qml/components/UploadProgressPanel.qml \
-    qml/components/SearchPanel.qml \
+    qml/dialogs/InputDialog.qml \
+    qml/dialogs/ShareDialog.qml \
     rpm/harbour-pilvi.spec \
     harbour-pilvi.desktop \
     harbour-pilvi.png \

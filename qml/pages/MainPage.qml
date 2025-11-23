@@ -68,15 +68,13 @@ Page {
                     })
                 }
             }
-            MenuItem {
-                text: qsTr("Upload file")
-                onClicked: {
-                    var picker = pageStack.push(Qt.resolvedUrl("../dialogs/FilePickerPage.qml"))
-                    picker.fileSelected.connect(function(filePath) {
-                        driveApi.uploadFile(filePath, "root")
-                    })
-                }
-            }
+            // TODO: Upload file (requires ContentHub API which is approved for Harbour)
+            // MenuItem {
+            //     text: qsTr("Upload file")
+            //     onClicked: {
+            //         // Will be implemented with ContentHub
+            //     }
+            // }
         }
 
         PushUpMenu {
