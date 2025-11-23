@@ -13,12 +13,11 @@ int main(int argc, char *argv[])
 
     QScopedPointer<QQuickView> view(SailfishApp::createView());
 
-    // Register types
-    qmlRegisterType<GoogleDriveApi>("harbour.pilvi.googledrive", 1, 0, "GoogleDriveApi");
+    // Register QML types (only types that can be instantiated from QML)
     qmlRegisterType<OAuthFlow>("harbour.pilvi.googledrive", 1, 0, "OAuthFlow");
     qmlRegisterType<FileModel>("harbour.pilvi.models", 1, 0, "FileModel");
 
-    // Create and expose singletons
+    // Create and expose singletons (driveApi needs CredentialStore, so expose as context property)
     CredentialStore *credentialStore = new CredentialStore(app.data());
     GoogleDriveApi *driveApi = new GoogleDriveApi(credentialStore, app.data());
 
