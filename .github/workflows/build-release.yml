@@ -50,7 +50,7 @@ jobs:
           release: ${{ env.SAILFISH_RELEASE }}
           fix-version: false
           check: true
-          extra-build-args: -DPILVI_CLIENT_ID="${{ secrets.PILVI_CLIENT_ID }}"
+          extra-build-args: --define "_pilvi_client_id ${{ secrets.PILVI_CLIENT_ID }}"
         env:
           PILVI_CLIENT_ID: ${{ secrets.PILVI_CLIENT_ID }}
 

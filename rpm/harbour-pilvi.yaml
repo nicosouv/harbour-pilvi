@@ -13,6 +13,8 @@ Description: |
 
 Configure: none
 Builder: qmake5
+QMakeOptions:
+- PILVI_CLIENT_ID=%{?_pilvi_client_id}%{!?_pilvi_client_id:}
 
 PkgConfigBR:
 - sailfishapp >= 1.0.2
