@@ -16,6 +16,13 @@ Page {
         loadFiles()
     }
 
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            // Reload files when page becomes active (e.g., after returning from sub-folder)
+            loadFiles()
+        }
+    }
+
     function loadFiles() {
         driveApi.listFiles(folderId, "")
     }
