@@ -64,13 +64,14 @@ Page {
                     })
                 }
             }
-            // TODO: Upload file (requires ContentHub API which is approved for Harbour)
-            // MenuItem {
-            //     text: qsTr("Upload file")
-            //     onClicked: {
-            //         // Will be implemented with ContentHub
-            //     }
-            // }
+            MenuItem {
+                text: qsTr("Upload file")
+                onClicked: {
+                    pageStack.push(Qt.resolvedUrl("FilePickerPage.qml"), {
+                        parentFolderId: "root"
+                    })
+                }
+            }
         }
 
         PushUpMenu {

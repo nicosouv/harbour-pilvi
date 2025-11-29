@@ -55,6 +55,7 @@ DISTFILES += \
     qml/pages/MainPage.qml \
     qml/pages/FileBrowserPage.qml \
     qml/pages/FileDetailsPage.qml \
+    qml/pages/FilePickerPage.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/AuthPage.qml \
     qml/pages/SearchPage.qml \
